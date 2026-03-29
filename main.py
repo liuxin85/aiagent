@@ -7,6 +7,7 @@ from functions.get_files_info import get_files_info,schema_get_files_info
 from functions.get_file_content import schema_get_file_content
 from functions.run_python_file import schema_run_python_file
 from functions.write_file import schema_write_file
+from call_function import call_function
 
 
 def main():
@@ -56,7 +57,7 @@ def main():
     
 
     response = client.models.generate_content(
-        model='gemini-2.5-flash', 
+        model='gemini-1.5-flash', 
         contents=messages,
         config=config
     )
@@ -70,6 +71,8 @@ def main():
 
     if response.function_calls:
         for function_call in response.function_calls:
+            result = call_function(function_call, verbos_flag)
+            print(result)
             print(f"Calling functions: {function_call.name}({function_call.args})")
     else:
         print(response.text)
